@@ -1,23 +1,24 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navigation() {
   const location = useLocation();
+  const { signOut } = useAuth();
   
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut();
   };
 
   const isActive = (path: string) => location.pathname === path;
 
   const navItems = [
-    { path: '/dispatch', label: 'Dispatch' },
-    { path: '/driver-management', label: 'Driver Management' },
-    { path: '/drivers', label: 'Drivers' },
+    { path: '/', label: 'Dashboard' },
     { path: '/par-levels', label: 'Par Levels' },
     { path: '/store', label: 'Store' },
-    { path: '/container-logs', label: 'Container Logs' }
+    { path: '/container-logs', label: 'Container Count Log' },
+    { path: '/driver-management', label: 'Driver Management' },
+    { path: '/driver', label: 'Driver' }
   ];
 
   return (

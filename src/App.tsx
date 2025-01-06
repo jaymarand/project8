@@ -1,87 +1,95 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { supabase } from './supabaseClient';
+import { AuthProvider } from './context/AuthContext';
+import LoginPage from './pages/auth/LoginPage';
+import SignupPage from './pages/auth/SignupPage';
+import { useAuth } from './context/AuthContext';
 import Navigation from './components/Navigation';
-import Login from './pages/Login';
+import ComingSoon from './pages/ComingSoon';
 
-// Lazy load pages for better performance
-const DriverManagement = React.lazy(() => import('./pages/DriverManagement'));
-const ParLevelsPage = React.lazy(() => import('./pages/ParLevelsPage'));
-const ContainerLogsPage = React.lazy(() => import('./pages/ContainerLogsPage'));
 const DispatchDashboard = React.lazy(() => import('./pages/DispatchDashboard'));
+const DriverManagement = React.lazy(() => import('./pages/DriverManagement'));
 const StorePage = React.lazy(() => import('./pages/StorePage'));
+const ContainerLogsPage = React.lazy(() => import('./pages/ContainerLogsPage'));
+const ParLevelsPage = React.lazy(() => import('./pages/ParLevelsPage'));
 
-// Simple storage helper
-const storage = {
-  saveUser: (user: any) => {
-    const userInfo = {
-      id: user.id,
-      email: user.email,
-      name: user.user_metadata?.name || ''
-    };
-    localStorage.setItem('user', JSON.stringify(userInfo));
-  },
-  getUser: () => {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
-  },
-  clearUser: () => {
-    localStorage.removeItem('user');
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+  if (!user) {
+    return <Navigate to="/login" />;
   }
+  return (
+    <>
+      <Navigation />
+      <div className="container mx-auto px-4 py-8">
+        <React.Suspense fallback={<div>Loading...</div>}>
+          {children}
+        </React.Suspense>
+      </div>
+    </>
+  );
 };
 
-export default function App() {
-  const [user, setUser] = useState(storage.getUser());
-
-  useEffect(() => {
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        storage.saveUser(session.user);
-        setUser(session.user);
-      }
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        storage.saveUser(session.user);
-        setUser(session.user);
-      } else {
-        storage.clearUser();
-        setUser(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  if (!user) {
-    return <Login />;
-  }
-
+function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50">
-        <Navigation />
-        <div className="container mx-auto px-4 py-8">
-          <React.Suspense fallback={
-            <div className="flex items-center justify-center h-32">
-              <div className="text-gray-500">Loading...</div>
-            </div>
-          }>
-            <Routes>
-              <Route path="/dispatch" element={<DispatchDashboard />} />
-              <Route path="/driver-management" element={<DriverManagement />} />
-              <Route path="/drivers" element={<DriverManagement />} />
-              <Route path="/par-levels" element={<ParLevelsPage />} />
-              <Route path="/store" element={<StorePage />} />
-              <Route path="/container-logs" element={<ContainerLogsPage />} />
-              <Route path="*" element={<Navigate to="/dispatch" />} />
-            </Routes>
-          </React.Suspense>
-        </div>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <DispatchDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/driver"
+            element={
+              <PrivateRoute>
+                <ComingSoon />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/driver-management"
+            element={
+              <PrivateRoute>
+                <DriverManagement />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/store"
+            element={
+              <PrivateRoute>
+                <StorePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/par-levels"
+            element={
+              <PrivateRoute>
+                <ParLevelsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/container-logs"
+            element={
+              <PrivateRoute>
+                <ContainerLogsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
+
+export default App;

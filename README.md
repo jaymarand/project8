@@ -1,16 +1,43 @@
 # Dispatch Dashboard
 
-A standalone React application for managing delivery runs, tracking supply needs, and monitoring run statuses in real-time.
+A standalone React application for managing delivery runs, tracking supply needs, and monitoring run statuses in real-time. This application includes driver management, par levels tracking, and container count logging functionality.
 
 ## Features
 
-- Real-time delivery run tracking
-- Supply needs monitoring
-- Run status management
-- Driver assignment
-- Time tracking for start, preload, complete, and depart times
-- Filtering by truck type (Box Truck/Tractor Trailer)
-- CSV export functionality
+- **Dashboard**
+  - Real-time delivery run tracking
+  - Supply needs monitoring
+  - Run status management
+  - Driver assignment
+  - Time tracking for start, preload, complete, and depart times
+  - Filtering by truck type (Box Truck/Tractor Trailer)
+  - CSV export functionality
+
+- **Par Levels**
+  - Track and manage par levels for different stores
+  - Monitor supply needs
+  - Update and maintain inventory thresholds
+
+- **Store Management**
+  - Store information management
+  - Supply tracking
+  - Store-specific settings
+
+- **Container Count Log**
+  - Track container movements
+  - Monitor container counts
+  - Historical logging
+
+- **Driver Management**
+  - Driver information management
+  - Assignment tracking
+  - Performance monitoring
+
+## Authentication
+
+- Role-based access control (Driver, Dispatch, Admin)
+- Secure login and signup functionality
+- Protected routes based on user roles
 
 ## Prerequisites
 
@@ -77,6 +104,12 @@ The application requires the following Supabase tables:
 - hardlines_needed (integer)
 - softlines_needed (integer)
 
+### users
+- id (uuid, primary key)
+- email (text)
+- role (text)
+- created_at (timestamp)
+
 ## Building for Production
 
 To create a production build:
@@ -86,6 +119,29 @@ npm run build
 ```
 
 The build artifacts will be stored in the `dist/` directory.
+
+## Project Structure
+
+```
+src/
+├── components/        # Reusable components
+├── context/          # Context providers (Auth, etc.)
+├── pages/            # Page components
+│   ├── auth/         # Authentication pages
+│   └── ...          # Other pages
+├── types/           # TypeScript type definitions
+└── ...
+```
+
+## Recent Updates
+
+- Added role-based authentication
+- Implemented protected routes
+- Added Par Levels management
+- Added Store management
+- Added Container Count logging
+- Improved navigation structure
+- Added Coming Soon placeholder for future Driver interface
 
 ## License
 

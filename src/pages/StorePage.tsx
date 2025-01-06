@@ -83,6 +83,11 @@ export default function StorePage() {
       return;
     }
 
+    if (formData.trailer_fullness === undefined) {
+      alert('Please enter trailer fullness');
+      return;
+    }
+
     if (formData.trailer_fullness < 0 || formData.trailer_fullness > 100) {
       alert('Trailer fullness must be between 0 and 100');
       return;

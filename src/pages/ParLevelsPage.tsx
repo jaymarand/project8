@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-
-interface Store {
-  department_number: string;
-  name: string;
-}
 
 interface StoreSupply {
   id: string;
   store_id: string;
-  stores: Store;
+  stores?: {
+    id: string;
+    name: string;
+    department_number: string;
+  } | null;
   sleeves: number;
   caps: number;
   canvases: number;
@@ -19,12 +18,12 @@ interface StoreSupply {
   par_level: number;
 }
 
-interface GroupedSupplies {
-  department: string;
-  store: string;
-  supplies: {
-    [type: string]: number;
-  };
+interface StoreDisplay {
+  stores?: {
+    id: string;
+    name: string;
+    department_number: string;
+  } | null;
 }
 
 const SUPPLY_TYPES = {
@@ -35,6 +34,22 @@ const SUPPLY_TYPES = {
   'Hardlines Raw': 'hardlines_raw',
   'Softlines Raw': 'softlines_raw'
 } as const;
+
+const StoreInfo: React.FC<StoreDisplay> = ({ stores }) => {
+  const deptNumber = stores?.department_number || '';
+  const storeName = stores?.name || '';
+  
+  return (
+    <>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+        {deptNumber}
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+        {storeName}
+      </td>
+    </>
+  );
+};
 
 export default function ParLevelsPage() {
   const [supplies, setSupplies] = useState<StoreSupply[]>([]);
@@ -135,13 +150,8 @@ export default function ParLevelsPage() {
             <tbody className="bg-white divide-y divide-gray-200">
               {supplies.map((supply) => (
                 <tr key={supply.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {supply.stores?.department_number}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {supply.stores?.name}
-                  </td>
-                  {Object.entries(SUPPLY_TYPES).map(([label, type]) => (
+                  <StoreInfo stores={supply.stores} />
+                  {Object.entries(SUPPLY_TYPES).map(([_, type]) => (
                     <td key={`${supply.id}-${type}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {editingCell === `${supply.id}-${type}` ? (
                         <input
@@ -162,7 +172,7 @@ export default function ParLevelsPage() {
                           onClick={() => handleEdit(supply, type)}
                           className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
                         >
-                          {supply[type as keyof StoreSupply]}
+                          {String(supply[type as keyof StoreSupply] || '')}
                         </div>
                       )}
                     </td>

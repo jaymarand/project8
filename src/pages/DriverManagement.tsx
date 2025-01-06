@@ -17,8 +17,8 @@ interface NewDriverForm {
   first_name: string;
   last_name: string;
   has_cdl: boolean;
-  cdl_number?: string;
-  cdl_expiration_date?: string;
+  cdl_number: string;
+  cdl_expiration_date: string;
 }
 
 export default function DriverManagement() {
@@ -58,6 +58,10 @@ export default function DriverManagement() {
 
   const addDriver = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (newDriver.has_cdl && !newDriver.cdl_number?.trim()) {
+      alert('Please enter a CDL number');
+      return;
+    }
     try {
       setLoading(true);
 
@@ -205,6 +209,7 @@ export default function DriverManagement() {
                       <label className="block text-sm font-medium text-gray-700">CDL Number</label>
                       <input
                         type="text"
+                        required
                         value={newDriver.cdl_number}
                         onChange={(e) => setNewDriver({ ...newDriver, cdl_number: e.target.value })}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -214,6 +219,7 @@ export default function DriverManagement() {
                       <label className="block text-sm font-medium text-gray-700">CDL Expiration Date</label>
                       <input
                         type="date"
+                        required
                         value={newDriver.cdl_expiration_date}
                         onChange={(e) => setNewDriver({ ...newDriver, cdl_expiration_date: e.target.value })}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"

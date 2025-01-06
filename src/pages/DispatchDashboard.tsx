@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { DeliveryRun, RunType, Store, SupplyNeed, TruckType } from '../types/dispatch';
 import { format } from 'date-fns';
@@ -180,33 +180,6 @@ export default function DispatchDashboard() {
         } catch (error) {
             console.error(`Error updating ${field}:`, error);
             alert(`Failed to update ${field}`);
-        }
-    };
-
-    // Update run status
-    const updateRunStatus = async (runId: string, newStatus: 'Upcoming' | 'Preloaded' | 'Complete' | 'Cancelled') => {
-        try {
-            const updates: Partial<DeliveryRun> = {
-                status: newStatus
-            };
-
-            // Set appropriate times based on status
-            if (newStatus === 'Preloaded') {
-                updates.preload_time = new Date().toISOString();
-            } else if (newStatus === 'Complete') {
-                updates.complete_time = new Date().toISOString();
-            }
-
-            const { error } = await supabase
-                .from('active_delivery_runs')
-                .update(updates)
-                .eq('id', runId);
-
-            if (error) throw error;
-            await fetchRuns();
-        } catch (error) {
-            console.error('Error updating run status:', error);
-            alert('Failed to update run status');
         }
     };
 

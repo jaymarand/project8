@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { format } from 'date-fns';
 import { CSVLink } from 'react-csv';
@@ -275,8 +275,7 @@ export default function ContainerLogsPage() {
                       {count.totes}
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
-                      {count.trailer_fullness}%
-                    </td>
+                      {count.trailer_fullness}%</td>
                     <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
                       {count.donation_count}
                     </td>

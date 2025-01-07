@@ -8,10 +8,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-    },
-    dedupe: ['react', 'react-dom', 'prop-types']
+      'prop-types': path.resolve(__dirname, 'src/shims/prop-types.js')
+    }
   },
   build: {
+    target: 'esnext',
     commonjsOptions: {
       include: [/node_modules/],
       transformMixedEsModules: true
@@ -19,8 +20,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          utils: ['prop-types']
+          vendor: ['react', 'react-dom', 'react-router-dom']
         }
       }
     }
@@ -28,9 +28,6 @@ export default defineConfig({
   server: {
     port: 5179,
     open: true,
-  },
-  optimizeDeps: {
-    include: ['prop-types']
   },
   outDir: 'dist',
   assetsDir: 'assets',

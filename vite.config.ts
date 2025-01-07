@@ -8,7 +8,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      'prop-types': path.resolve(__dirname, 'node_modules/prop-types/index.js')
     },
+  },
+  optimizeDeps: {
+    include: ['prop-types']
   },
   server: {
     port: 5179,
@@ -21,7 +25,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom']
+          vendor: ['react', 'react-dom', 'react-router-dom', 'prop-types']
         }
       }
     }

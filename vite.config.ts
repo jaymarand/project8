@@ -8,26 +8,31 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      'prop-types': path.resolve(__dirname, 'node_modules/prop-types/index.js')
     },
+    dedupe: ['react', 'react-dom', 'prop-types']
   },
-  optimizeDeps: {
-    include: ['prop-types']
+  build: {
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          utils: ['prop-types']
+        }
+      }
+    }
   },
   server: {
     port: 5179,
     open: true,
   },
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom', 'prop-types']
-        }
-      }
-    }
+  optimizeDeps: {
+    include: ['prop-types']
   },
+  outDir: 'dist',
+  assetsDir: 'assets',
+  sourcemap: true,
 });

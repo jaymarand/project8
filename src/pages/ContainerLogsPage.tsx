@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { format } from 'date-fns';
-import { CSVLink } from 'react-csv/lib/index.js';
+import { CSVLink } from 'react-csv';
 
 interface Store {
   id: string;

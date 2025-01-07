@@ -18,5 +18,8 @@ export default defineConfig({
     rollupOptions: {
       external: ['prop-types'],
     },
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: true,
   },
-})
+});

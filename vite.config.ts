@@ -8,11 +8,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      'prop-types': path.resolve(__dirname, 'src/shims/prop-types.js')
     }
   },
   build: {
-    target: 'esnext',
     commonjsOptions: {
       include: [/node_modules/],
       transformMixedEsModules: true
@@ -28,8 +26,5 @@ export default defineConfig({
   server: {
     port: 5179,
     open: true,
-  },
-  outDir: 'dist',
-  assetsDir: 'assets',
-  sourcemap: true,
+  }
 });

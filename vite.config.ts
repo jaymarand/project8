@@ -15,11 +15,16 @@ export default defineConfig({
     open: true,
   },
   build: {
-    rollupOptions: {
-      external: ['prop-types'],
-    },
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          csv: ['react-csv', 'prop-types']
+        }
+      }
+    }
   },
 });

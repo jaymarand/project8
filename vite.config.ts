@@ -21,8 +21,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          csv: ['react-csv', 'prop-types']
+          vendor: ['react', 'react-dom', 'react-router-dom']
         }
       }
     }
